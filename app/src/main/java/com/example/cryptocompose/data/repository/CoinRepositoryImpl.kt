@@ -1,17 +1,20 @@
 package com.example.cryptocompose.data.repository
 
-import com.example.cryptocompose.data.model.Coin
-import com.example.cryptocompose.data.model.DetailCoin
-import com.example.cryptocompose.data.remote.CoinPaprikaAPI
+
+import com.example.cryptocompose.data.model.gecko.CoinDetail
+import com.example.cryptocompose.data.model.gecko.CoinList
+import com.example.cryptocompose.data.remote.CoinGeckoAPI
+import retrofit2.Response
+import javax.inject.Inject
 
 class CoinRepositoryImpl @Inject constructor(
-    private val api : CoinPaprikaAPI
+    private val api : CoinGeckoAPI
 ) : CoinRepository {
-    override suspend fun getCoins(): List<Coin> {
-        return api.getCoins()
+    override suspend fun getCoins(): Response<List<CoinList>> {
+        return api.getCoinList()
     }
 
-    override suspend fun getCoingById(coinId: String): DetailCoin {
+    override suspend fun getCoinById(coinId: String): Response<CoinDetail> {
         return api.getCoinById(coinId)
     }
 }
