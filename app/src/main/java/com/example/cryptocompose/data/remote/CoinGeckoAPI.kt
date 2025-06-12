@@ -8,12 +8,12 @@ import retrofit2.http.Path
 
 interface CoinGeckoAPI {
 
-    @GET("/v3/coins/markets")
+    @GET("/markets")
     suspend fun getCoinList() : Response<List<CoinList>>
 
-    @GET("v3/coins/{id}")
+    @GET("/{id}")
     suspend fun getCoinById(
-        @Path("coinId")
+        @Path("id")
         coinId : String
     ) : Response<CoinDetail>
 

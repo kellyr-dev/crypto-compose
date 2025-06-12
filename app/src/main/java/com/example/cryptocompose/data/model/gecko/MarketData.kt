@@ -69,7 +69,7 @@ data class MarketData(
     @SerializedName("price_change_percentage_24h")
     val priceChangePercentage24h: Double,
     @SerializedName("price_change_percentage_24h_in_currency")
-    val priceChangePercentage24hInCurrency: PriceChangePercentage24hInCurrency,
+    val priceChangePercentage24hInCurrency: PriceChange24hInCurrency,
     @SerializedName("price_change_percentage_30d")
     val priceChangePercentage30d: Double,
     @SerializedName("price_change_percentage_30d_in_currency")

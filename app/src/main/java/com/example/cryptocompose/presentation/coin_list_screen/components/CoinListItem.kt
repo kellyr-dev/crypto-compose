@@ -25,11 +25,11 @@ import com.example.cryptocompose.data.model.gecko.CoinList
 
 @Composable
 fun CoinListItem(
-    coin: CoinDetail,
-    onItemClick : (CoinDetail) -> Unit
+    coin: CoinList,
+    onItemClick : (CoinList) -> Unit
 ){
 
-    var change = coin.marketData.athChangePercentage
+    var change = coin.priceChangePercentage24h
 
     Row(
         modifier = Modifier
@@ -44,7 +44,7 @@ fun CoinListItem(
             model = coin.image,
             contentDescription = "coin image",
             modifier = Modifier
-                .size(96.dp)
+                .size(26.dp)
                 .clip(RoundedCornerShape(10.dp)),
             contentScale = ContentScale.Crop
         )
@@ -56,18 +56,17 @@ fun CoinListItem(
         )
 
         Text(
-            text = "${coin.marketData.currentPrice}",
+            text = "${coin.currentPrice}",
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis
         )
 
         Text(
-            text = "${coin.marketData.athChangePercentage}",
+            text = "${change}",
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis,
-            color = if(change.usd > 0) Color.Green else Color.Red
+            color = if(change > 0) Color.Green else Color.Red
         )
-
     }
 
 
