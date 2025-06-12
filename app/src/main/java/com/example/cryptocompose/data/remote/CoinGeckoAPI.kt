@@ -5,11 +5,18 @@ import com.example.cryptocompose.data.model.gecko.CoinList
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CoinGeckoAPI {
 
-    @GET("/markets")
-    suspend fun getCoinList() : Response<List<CoinList>>
+    @GET("coins/markets")
+    suspend fun getCoinList(
+        @Query("vs_currency") vsCurrency: String,
+        @Query("order") order: String,
+        @Query("per_page") perPage: Int,
+        @Query("page") page: Int,
+        @Query("sparkline") sparkline: Boolean
+    ) : Response<List<CoinList>>
 
     @GET("/{id}")
     suspend fun getCoinById(

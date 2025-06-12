@@ -30,11 +30,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGeckoAPI(): CoinGeckoAPI {
-
+    fun provideGeckoAPI(client: OkHttpClient): CoinGeckoAPI {
         val retrofit = Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
 
         Log.d("AppModule", "retrofit instance created ${retrofit}")
