@@ -37,8 +37,6 @@ object AppModule {
             .client(client)
             .build()
 
-        Log.d("AppModule", "retrofit instance created ${retrofit}")
-
         return retrofit.create(CoinGeckoAPI::class.java)
     }
 

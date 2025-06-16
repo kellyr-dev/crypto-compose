@@ -22,7 +22,8 @@ class CoinDetailViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _state = MutableStateFlow<CoinDetail?>(null)
-    val state  = _state.asStateFlow()
+    val state = _state.asStateFlow()
+
 
     fun getCoin(id: String){
         viewModelScope.launch {
@@ -31,7 +32,7 @@ class CoinDetailViewModel @Inject constructor(
             if (response.isSuccessful){
                 _state.update { response.body() }
             } else {
-                Log.e(TAG, "Error fetching: ${response.message()}")
+                Log.e(TAG, "Error fetching in CoinDetailViewModel: ${response.message()}")
             }
 
         }

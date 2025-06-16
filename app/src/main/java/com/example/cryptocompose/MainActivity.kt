@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.cryptocompose.presentation.coin_list_screen.components.CoinListScreen
 import com.example.cryptocompose.presentation.detail_coin_screen.components.CoinDetailScreen
 import com.example.cryptocompose.presentation.navigation.Screen
@@ -42,9 +44,12 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                route = Screen.CoinDetailScreen.route + "/{id}"
+                                route = Screen.CoinDetailScreen.route + "/{id}",
+                                arguments = listOf( navArgument(name = "id"){
+                                    type = NavType.StringType
+                                })
                             ){
-                                CoinDetailScreen()
+                                id -> id.arguments?.getString("id")?.let { it -> CoinDetailScreen(id = it) }
                             }
                     }
                 }

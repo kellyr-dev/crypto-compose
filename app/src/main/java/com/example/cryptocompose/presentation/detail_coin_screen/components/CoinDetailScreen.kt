@@ -27,9 +27,11 @@ import com.example.cryptocompose.presentation.detail_coin_screen.CoinDetailViewM
 
 @Composable
 fun CoinDetailScreen(
-    viewModel : CoinDetailViewModel = hiltViewModel()
+    viewModel : CoinDetailViewModel = hiltViewModel(),
+    id: String
 ){
 
+    val modelCoin = viewModel.getCoin(id)
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Box(modifier = Modifier.fillMaxSize()){
@@ -49,7 +51,7 @@ fun CoinDetailScreen(
                             .clip(RoundedCornerShape(10.dp)),
                         contentScale = ContentScale.Crop
                     )
-                    Text(text = "${state!!.name} (${state!!.symbol})",
+                    Text(text = "${state?.name} (${state?.symbol})",
                             style = MaterialTheme.typography.titleLarge
                         )
                 }

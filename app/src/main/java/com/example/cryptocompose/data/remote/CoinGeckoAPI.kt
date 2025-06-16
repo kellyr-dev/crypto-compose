@@ -18,10 +18,10 @@ interface CoinGeckoAPI {
         @Query("sparkline") sparkline: Boolean
     ) : Response<List<CoinList>>
 
-    @GET("/{id}")
+    @GET("coins/{id}")
     suspend fun getCoinById(
         @Path("id")
-        coinId : String
+        id : String
     ) : Response<CoinDetail>
 
 }
