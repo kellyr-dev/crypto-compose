@@ -17,7 +17,7 @@ data class MarketData(
     @SerializedName("atl_date")
     val atlDate: AtlDate,
     @SerializedName("circulating_supply")
-    val circulatingSupply: Int,
+    val circulatingSupply: Double,
     @SerializedName("current_price")
     val currentPrice: CurrentPrice,
     @SerializedName("fdv_to_tvl_ratio")
@@ -33,7 +33,7 @@ data class MarketData(
     @SerializedName("market_cap")
     val marketCap: MarketCap,
     @SerializedName("market_cap_change_24h")
-    val marketCapChange24h: Long,
+    val marketCapChange24h: Double,
     @SerializedName("market_cap_change_24h_in_currency")
     val marketCapChange24hInCurrency: MarketCapChange24hInCurrency,
     @SerializedName("market_cap_change_percentage_24h")
@@ -49,7 +49,7 @@ data class MarketData(
     @SerializedName("mcap_to_tvl_ratio")
     val mcapToTvlRatio: Any,
     @SerializedName("price_change_24h")
-    val priceChange24h: Int,
+    val priceChange24h: Double,
     @SerializedName("price_change_24h_in_currency")
     val priceChange24hInCurrency: PriceChange24hInCurrency,
     @SerializedName("price_change_percentage_14d")
@@ -85,7 +85,7 @@ data class MarketData(
     @SerializedName("roi")
     val roi: Any,
     @SerializedName("total_supply")
-    val totalSupply: Int,
+    val totalSupply: Double,
     @SerializedName("total_value_locked")
     val totalValueLocked: Any,
     @SerializedName("total_volume")

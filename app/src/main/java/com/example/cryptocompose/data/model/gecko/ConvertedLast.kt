@@ -9,5 +9,5 @@ data class ConvertedLast(
     @SerializedName("eth")
     val eth: Double,
     @SerializedName("usd")
-    val usd: Int
+    val usd: Double
 )

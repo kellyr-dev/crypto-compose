@@ -19,7 +19,7 @@ data class Ticker(
     @SerializedName("is_stale")
     val isStale: Boolean,
     @SerializedName("last")
-    val last: Int,
+    val last: Double,
     @SerializedName("last_fetch_at")
     val lastFetchAt: String,
     @SerializedName("last_traded_at")
