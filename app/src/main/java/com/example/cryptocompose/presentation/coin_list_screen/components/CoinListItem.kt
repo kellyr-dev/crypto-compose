@@ -71,16 +71,6 @@ fun CoinListItem(
             maxLines = 1
         )
 
-//        Text(
-//            text = changeWithSign,
-//            style = MaterialTheme.typography.bodyMedium,
-//            overflow = TextOverflow.Ellipsis,
-//            color = if(change > 0) Color.Green else Color.Red,
-//                    modifier = Modifier
-//                    .weight(0.2f)
-//                .padding(start = 8.dp),
-//            maxLines = 1
-//        )
 
         Box(modifier = Modifier
             .weight(0.2f)

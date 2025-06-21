@@ -11,7 +11,7 @@ data class MarketCap(
     @SerializedName("aud")
     val aud: Double,
     @SerializedName("bch")
-    val bch: Int,
+    val bch: Double,
     @SerializedName("bdt")
     val bdt: Double,
     @SerializedName("bhd")
@@ -25,7 +25,7 @@ data class MarketCap(
     @SerializedName("brl")
     val brl: Double,
     @SerializedName("btc")
-    val btc: Int,
+    val btc: Double,
     @SerializedName("cad")
     val cad: Double,
     @SerializedName("chf")
@@ -43,7 +43,7 @@ data class MarketCap(
     @SerializedName("eos")
     val eos: Double,
     @SerializedName("eth")
-    val eth: Int,
+    val eth: Double,
     @SerializedName("eur")
     val eur: Double,
     @SerializedName("gbp")
@@ -117,7 +117,7 @@ data class MarketCap(
     @SerializedName("xag")
     val xag: Double,
     @SerializedName("xau")
-    val xau: Int,
+    val xau: Double,
     @SerializedName("xdr")
     val xdr: Double,
     @SerializedName("xlm")
@@ -125,7 +125,7 @@ data class MarketCap(
     @SerializedName("xrp")
     val xrp: Double,
     @SerializedName("yfi")
-    val yfi: Int,
+    val yfi: Double,
     @SerializedName("zar")
     val zar: Double
 )

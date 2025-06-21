@@ -24,7 +24,6 @@ class CoinDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow<CoinDetail?>(null)
     val state = _state.asStateFlow()
 
-
     fun getCoin(id: String){
         viewModelScope.launch {
 

@@ -43,15 +43,15 @@ fun CoinDetailScreen(
                 Row( modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    AsyncImage(
-                        model = state?.image,
-                        contentDescription = "coin image",
-                        modifier = Modifier
-                            .size(34.dp)
-                            .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(text = "${state?.name} (${state?.symbol})",
+//                    AsyncImage(
+//                        model = state?.image,
+//                        contentDescription = "coin image",
+//                        modifier = Modifier
+//                            .size(14.dp)
+//                            .clip(RoundedCornerShape(10.dp)),
+//                        contentScale = ContentScale.Crop)
+
+                    Text(text = "${state?.name} (${state?.symbol?.uppercase()})",
                             style = MaterialTheme.typography.titleLarge
                         )
                 }
