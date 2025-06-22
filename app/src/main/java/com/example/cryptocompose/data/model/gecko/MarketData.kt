@@ -45,7 +45,7 @@ data class MarketData(
     @SerializedName("market_cap_rank")
     val marketCapRank: Int,
     @SerializedName("max_supply")
-    val maxSupply: Int,
+    val maxSupply: Double,
     @SerializedName("mcap_to_tvl_ratio")
     val mcapToTvlRatio: Any,
     @SerializedName("price_change_24h")

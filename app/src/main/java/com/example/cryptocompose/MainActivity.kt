@@ -34,7 +34,6 @@ class MainActivity : ComponentActivity() {
             CryptoComposeTheme {
                 Surface (color = MaterialTheme.colorScheme.background) {
                     NavigationComponent()
-
                 }
             }
         }
