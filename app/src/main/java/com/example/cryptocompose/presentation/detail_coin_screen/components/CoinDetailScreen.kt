@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +54,7 @@ fun CoinDetailScreen(
                 title = {
 
                     Row(
-                        modifier = Modifier.padding(horizontal = 10.dp),
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
 
                     ){
@@ -82,11 +84,81 @@ fun CoinDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(20.dp)
+                .padding(16.dp)
         ) {
 
             item {
 
+                val priceChange24h = state?.marketData?.priceChangePercentage24h ?: 0.0
+                val textColor = if (priceChange24h >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
+
+                HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.5.dp, )
+                Row (
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceAround
+
+                ){
+
+                    Column(
+                        modifier = Modifier.padding(6.dp),
+
+                    ) {
+                        Text(
+                            text = "$${state?.marketData?.currentPrice?.usd}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = textColor
+                        )
+                        Text(
+                            text = "Rank: ${state?.marketData?.marketCapRank}",
+                            style = MaterialTheme.typography.titleSmall,
+
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.padding(6.dp),
+
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                                    modifier = Modifier.padding(4.dp)
+                        ) {
+                            Text(
+                                text = "High(24h): $${state?.marketData?.high24h?.usd}",
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier.padding(horizontal = 6.dp)
+
+                            )
+                            Text(
+                                text = "Low(24h): $${state?.marketData?.low24h?.usd}",
+                                style = MaterialTheme.typography.titleSmall,
+
+                            )
+
+                        }
+                        Row (horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.padding(4.dp)
+
+                        ) {
+//                            Text(
+//                                text = "Vol(24h): $${state?.marketData?.totalVolume?.usd}",
+//                                style = MaterialTheme.typography.titleSmall,
+//
+//                            )
+                            Text(
+                                text = "Ath: $${state?.marketData?.ath?.usd}",
+                                style = MaterialTheme.typography.titleSmall,
+
+                            )
+                        }
+                    }
+
+                }
+
+                HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.5.dp, )
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "Chart",
                     style = MaterialTheme.typography.titleMedium
