@@ -1,11 +1,7 @@
 package com.example.cryptocompose.presentation.detail_coin_screen.components
 
-import android.annotation.SuppressLint
-import android.text.Layout
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,17 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.cryptocompose.presentation.detail_coin_screen.CoinDetailViewModel
 import java.text.NumberFormat
-import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,12 +44,12 @@ fun CoinDetailScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
-            .padding(10.dp),
+            .padding(8.dp),
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text( text = "${state?.symbol?.uppercase()}", style = MaterialTheme.typography.titleMedium, color = Color(0xFFA9C7C7))
-                },
+                }
             )
         }
 
@@ -73,8 +63,11 @@ fun CoinDetailScreen(
 
             item {
 
-                val price = state?.marketData?.priceChangePercentage24h ?: 0.0
-                val textColor = if (price >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
+                val price24h = state?.marketData?.priceChange24h ?: 0.0
+                val currentPrice = state?.marketData?.currentPrice?.usd ?: 0.0
+                val percentage24h = state?.marketData?.priceChangePercentage24h
+                val numberFormat = NumberFormat.getInstance()
+                val textColor = if (price24h >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
                 Row (
                     modifier = Modifier
                         .padding(2.dp)
@@ -99,25 +92,27 @@ fun CoinDetailScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "${state?.name}",
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleMedium,
                                 color = Color(0xFFA9C7C7)
                             )
                         }
                         Text(
-                            text = "$${state?.marketData?.currentPrice?.usd}",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            text = "$${numberFormat.format(currentPrice)}",
                             style = MaterialTheme.typography.titleLarge,
                             color = textColor
                         )
 
-                        Row (modifier = Modifier.padding(horizontal = 8.dp)) {
+                        Row (modifier = Modifier.padding(horizontal = 12.dp)) {
 
-                            val numberFormat = NumberFormat.getInstance()
+                            val formatterPercentage = String.format("%.2f", percentage24h)
                             Text(
-                                text = "$${numberFormat.format(abs(price))}",
+                                text = "$${numberFormat.format(price24h)}",
                                 style = MaterialTheme.typography.titleSmall,
                             )
                             Text(
-                                text = " (${state?.marketData?.priceChangePercentage24h}%)",
+
+                                text = " (${formatterPercentage}%)",
                                 style = MaterialTheme.typography.titleSmall,
                                 color = textColor
                             )
@@ -133,47 +128,127 @@ fun CoinDetailScreen(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = "Key Stats",
+                    text = "Key stats",
                     style = MaterialTheme.typography.titleMedium
                 )
-                Column(
-                    modifier = Modifier.padding(6.dp),
+                Spacer(modifier = Modifier.height(20.dp))
+                Column () {
 
-                    ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier.padding(4.dp)
-                    ) {
-                        Text(
-                            text = "High(24h): $${state?.marketData?.high24h?.usd}",
-                            style = MaterialTheme.typography.titleSmall,
+                    val marketCap = state?.marketData?.marketCap?.usd ?: 0.0
+                    val ath = state?.marketData?.ath?.usd ?: 0.0
+                    val volume = state?.marketData?.totalVolume?.usd ?: 1.0
+                    val low = state?.marketData?.low24h?.usd ?: 0.0
+                    val high = state?.marketData?.high24h?.usd ?: 0.0
 
-                        )
-                        Text(
-                            text = "Low(24h): $${state?.marketData?.low24h?.usd}",
-                            style = MaterialTheme.typography.titleSmall,
+                    val totalSupply = state?.marketData?.totalSupply ?: 0.0
+                    val circulSupply = state?.marketData?.circulatingSupply ?: 1.0
+                    val supply = (totalSupply/circulSupply) * 100
 
-                            )
 
+                    // Market Rank
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "Maket rank")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "#${state?.marketData?.marketCapRank}")
+                        }
                     }
-                    Row (horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier.padding(4.dp)
 
-                    ) {
-                        Text(
-                            text = "Ath: $${state?.marketData?.ath?.usd}",
-                            style = MaterialTheme.typography.titleSmall,
-
-                            )
-
-                        Text(
-                            text = "Vol(24h): $${state?.marketData?.totalVolume?.usd}",
-                            style = MaterialTheme.typography.titleSmall,
-                        )
+                    // Market Cap
+                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.8.dp, )
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "Maket Cap")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "$${numberFormat.format(marketCap)}")
+                        }
                     }
+
+                    // Circulating Supply
+                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.8.dp, )
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp,),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "Circulating Supply")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "${String.format("%.2f", supply)}%")
+                        }
+                    }
+
+
+                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.8.dp, )
+                    // 24H volume
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp,),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "Volume")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "$${numberFormat.format(volume)}")
+                        }
+                    }
+                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.8.dp, )
+                    // Low 24H
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp,),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "24H Low")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "$${numberFormat.format(low)}")
+                        }
+                    }
+                    // High 24H
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp,),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "24H High")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "$${numberFormat.format(high)}")
+                        }
+                    }
+                    // ath
+                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.8.dp, )
+                    Row(modifier = Modifier.fillMaxSize().padding(vertical = 4.dp), Arrangement.SpaceBetween){
+                        Column(modifier = Modifier.padding(horizontal = 10.dp,),
+                            horizontalAlignment = Alignment.Start)
+                        {
+                            Text( text = "All-time high")
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 8.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text( text = "$${numberFormat.format(ath)}")
+                        }
+                    }
+
                 }
-
-                Text(text = "Description",
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(text = "About",
                     style = MaterialTheme.typography.titleMedium
                     )
                 Spacer(modifier = Modifier.height(10.dp))
