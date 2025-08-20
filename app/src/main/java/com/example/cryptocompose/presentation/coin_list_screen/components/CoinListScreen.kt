@@ -56,7 +56,6 @@ fun CoinListScreen(
             Column(modifier = Modifier.padding(paddingValues)) {
 
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-
                     items(coinstate.size){ coin ->
 
                         CoinListItem(coin = coinstate.get(coin), onItemClick = {

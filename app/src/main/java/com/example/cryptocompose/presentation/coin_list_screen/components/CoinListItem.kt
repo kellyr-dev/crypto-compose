@@ -30,7 +30,7 @@ import com.example.cryptocompose.data.model.gecko.CoinList
 @Composable
 fun CoinListItem(
     coin: CoinList,
-    onItemClick : (CoinList) -> Unit
+    onItemClick : (CoinList) -> Unit // check
 ){
 
     Row(

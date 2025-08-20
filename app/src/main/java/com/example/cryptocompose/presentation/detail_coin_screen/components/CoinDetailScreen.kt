@@ -1,5 +1,7 @@
 package com.example.cryptocompose.presentation.detail_coin_screen.components
 
+import android.annotation.SuppressLint
+import android.text.Layout
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +40,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.cryptocompose.presentation.detail_coin_screen.CoinDetailViewModel
+import java.text.NumberFormat
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,31 +53,12 @@ fun CoinDetailScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
+        modifier = Modifier.fillMaxSize()
+            .padding(10.dp),
         topBar = {
             TopAppBar(
                 title = {
-
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-
-                    ){
-                        AsyncImage(
-                            model = state?.image?.small,
-                            contentDescription = "${state?.name} logo",
-                            modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "${state?.name} (${state?.symbol?.uppercase()})",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
-
-                    }
+                    Text( text = "${state?.symbol?.uppercase()}", style = MaterialTheme.typography.titleMedium, color = Color(0xFFA9C7C7))
                 },
             )
         }
@@ -84,77 +69,60 @@ fun CoinDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
         ) {
 
             item {
 
-                val priceChange24h = state?.marketData?.priceChangePercentage24h ?: 0.0
-                val textColor = if (priceChange24h >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
-
-                HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.5.dp, )
+                val price = state?.marketData?.priceChangePercentage24h ?: 0.0
+                val textColor = if (price >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
                 Row (
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(2.dp)
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Start
 
                 ){
-
                     Column(
-                        modifier = Modifier.padding(6.dp),
-
+                        modifier = Modifier.padding(2.dp),
                     ) {
+
+                        Row (modifier = Modifier.padding(horizontal = 8.dp)) {
+                            AsyncImage(
+                                model = state?.image?.small,
+                                contentDescription = "${state?.name} logo",
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "${state?.name}",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = Color(0xFFA9C7C7)
+                            )
+                        }
                         Text(
                             text = "$${state?.marketData?.currentPrice?.usd}",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleLarge,
                             color = textColor
                         )
-                        Text(
-                            text = "Rank: ${state?.marketData?.marketCapRank}",
-                            style = MaterialTheme.typography.titleSmall,
 
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.padding(6.dp),
+                        Row (modifier = Modifier.padding(horizontal = 8.dp)) {
 
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier.padding(4.dp)
-                        ) {
+                            val numberFormat = NumberFormat.getInstance()
                             Text(
-                                text = "High(24h): $${state?.marketData?.high24h?.usd}",
+                                text = "$${numberFormat.format(abs(price))}",
                                 style = MaterialTheme.typography.titleSmall,
-                                modifier = Modifier.padding(horizontal = 6.dp)
-
                             )
                             Text(
-                                text = "Low(24h): $${state?.marketData?.low24h?.usd}",
+                                text = " (${state?.marketData?.priceChangePercentage24h}%)",
                                 style = MaterialTheme.typography.titleSmall,
-
-                            )
-
-                        }
-                        Row (horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(4.dp)
-
-                        ) {
-//                            Text(
-//                                text = "Vol(24h): $${state?.marketData?.totalVolume?.usd}",
-//                                style = MaterialTheme.typography.titleSmall,
-//
-//                            )
-                            Text(
-                                text = "Ath: $${state?.marketData?.ath?.usd}",
-                                style = MaterialTheme.typography.titleSmall,
-
+                                color = textColor
                             )
                         }
                     }
-
                 }
 
                 HorizontalDivider(color = Color.Gray.copy(alpha = 0.2f), thickness = 0.5.dp, )
@@ -164,6 +132,46 @@ fun CoinDetailScreen(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "Key Stats",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Column(
+                    modifier = Modifier.padding(6.dp),
+
+                    ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Text(
+                            text = "High(24h): $${state?.marketData?.high24h?.usd}",
+                            style = MaterialTheme.typography.titleSmall,
+
+                        )
+                        Text(
+                            text = "Low(24h): $${state?.marketData?.low24h?.usd}",
+                            style = MaterialTheme.typography.titleSmall,
+
+                            )
+
+                    }
+                    Row (horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.padding(4.dp)
+
+                    ) {
+                        Text(
+                            text = "Ath: $${state?.marketData?.ath?.usd}",
+                            style = MaterialTheme.typography.titleSmall,
+
+                            )
+
+                        Text(
+                            text = "Vol(24h): $${state?.marketData?.totalVolume?.usd}",
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                    }
+                }
 
                 Text(text = "Description",
                     style = MaterialTheme.typography.titleMedium
