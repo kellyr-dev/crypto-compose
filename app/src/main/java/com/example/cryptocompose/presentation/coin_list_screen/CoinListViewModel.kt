@@ -28,7 +28,7 @@ class CoinListViewModel @Inject constructor(
     private val repository : CoinRepositoryImpl
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<List<CoinList>>(emptyList())
+    private val _state = MutableStateFlow(CoinListState())
     val state  = _state.asStateFlow()
 
     init {
@@ -37,7 +37,14 @@ class CoinListViewModel @Inject constructor(
             val response = repository.getCoins()
 
             if (response.isSuccessful){
-                _state.update { response.body()!! }
+
+                val completeList = response.body()!!
+
+                _state.value = _state.value.copy(
+                    list = completeList,
+                    topGainers = completeList.sortedByDescending { it.priceChangePercentage24h }.take(20),
+                    topLosers = completeList.sortedBy { it.priceChangePercentage24h }.take(20)
+                )
             } else {
                 Log.e(TAG, "Error fetching: ${response.errorBody()}")
             }
@@ -48,8 +55,9 @@ class CoinListViewModel @Inject constructor(
 
 data class CoinListState(
 
-    val isLoading : Boolean = false,
-    val coins : List<CoinList> = emptyList(),
-    val error : String = ""
+    val list : List<CoinList> = emptyList(),
+    val topGainers : List<CoinList> = emptyList(),
+    val topLosers : List<CoinList> = emptyList(),
+    val page : Int = 1
 
 )

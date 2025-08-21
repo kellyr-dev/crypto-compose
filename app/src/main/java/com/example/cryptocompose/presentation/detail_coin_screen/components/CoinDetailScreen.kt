@@ -68,6 +68,7 @@ fun CoinDetailScreen(
                 val percentage24h = state?.marketData?.priceChangePercentage24h
                 val numberFormat = NumberFormat.getInstance()
                 val textColor = if (price24h >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
+
                 Row (
                     modifier = Modifier
                         .padding(2.dp)

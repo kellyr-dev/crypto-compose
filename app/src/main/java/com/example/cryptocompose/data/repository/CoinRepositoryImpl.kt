@@ -15,7 +15,7 @@ class CoinRepositoryImpl @Inject constructor(
    suspend fun getCoins() = api.getCoinList(
        vsCurrency = "usd",
        order = "market_cap_desc",
-       perPage = 20,
+       perPage = 249,
        page = 1,
        sparkline = false
    )
