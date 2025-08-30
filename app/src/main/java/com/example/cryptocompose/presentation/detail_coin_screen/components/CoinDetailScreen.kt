@@ -81,7 +81,7 @@ fun CoinDetailScreen(
                         modifier = Modifier.padding(2.dp),
                     ) {
 
-                        Row (modifier = Modifier.padding(horizontal = 8.dp)) {
+                        Row (modifier = Modifier.padding(horizontal = 6.dp)) {
                             AsyncImage(
                                 model = state?.image?.small,
                                 contentDescription = "${state?.name} logo",
