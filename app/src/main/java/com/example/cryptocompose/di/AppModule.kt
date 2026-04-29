@@ -1,13 +1,18 @@
 package com.example.cryptocompose.di
 
-import android.util.Log
+import android.content.Context
+import androidx.room.Room
 import com.example.cryptocompose.common.Constants
+import com.example.cryptocompose.data.db.CoinDao
+import com.example.cryptocompose.data.db.CoinDatabase
 import com.example.cryptocompose.data.remote.CoinGeckoAPI
+import com.example.cryptocompose.data.remote.CoinRemoteDataSource
 import com.example.cryptocompose.data.repository.CoinRepository
 import com.example.cryptocompose.data.repository.CoinRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -23,9 +28,9 @@ object AppModule {
     @Singleton
     fun provideClient(): OkHttpClient = OkHttpClient
             .Builder()
-            .connectTimeout(60 * 60, TimeUnit.SECONDS)
-            .readTimeout(60 * 60, TimeUnit.SECONDS)
-            .writeTimeout(60 * 60, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
     @Provides
@@ -38,6 +43,32 @@ object AppModule {
             .build()
 
         return retrofit.create(CoinGeckoAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext context: Context
+    ): CoinDatabase {
+        return Room.databaseBuilder(
+            context,
+            CoinDatabase::class.java,
+            "crypto_db"
+        ).build()
+    }
+
+    @Provides
+    fun provideCoinDao(db: CoinDatabase): CoinDao {
+        return db.CoinDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCoinRepository(
+        remote: CoinRemoteDataSource,
+        dao: CoinDao
+    ): CoinRepository {
+        return CoinRepositoryImpl(remote, dao)
     }
 
 }

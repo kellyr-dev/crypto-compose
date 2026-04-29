@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.cryptocompose.presentation.coin_list_screen.components.CoinListScreen
-import com.example.cryptocompose.presentation.detail_coin_screen.components.CoinDetailScreen
+import com.example.cryptocompose.presentation.coin_list_screen.CoinListScreen
+import com.example.cryptocompose.presentation.detail_coin_screen.CoinDetailScreen
 
 @Composable
 fun NavigationComponent() {

@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cryptocompose.data.model.gecko.CoinDetail
-import com.example.cryptocompose.data.model.gecko.CoinList
-import com.example.cryptocompose.data.repository.CoinRepository
 import com.example.cryptocompose.data.repository.CoinRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val TAG = "CoinDetailViewModel"
+private const val TAG = "CoinDetailViewModel"
 
 @HiltViewModel
 class CoinDetailViewModel @Inject constructor(
@@ -29,10 +27,10 @@ class CoinDetailViewModel @Inject constructor(
         viewModelScope.launch {
 
             val response = repository.getCoinById(id)
-            if (response.isSuccessful){
-                _state.update { response.body() }
+            if (response.isSuccess){
+                _state.update { response.getOrNull() }
             } else {
-                Log.e(TAG, "Error fetching in CoinDetailViewModel: ${response.message()}")
+                Log.e(TAG, "Error fetching in CoinDetailViewModel: ${response.exceptionOrNull()?.message}")
             }
 
         }

@@ -25,39 +25,54 @@ private val TAG = "CoinListViewModel"
 
 @HiltViewModel
 class CoinListViewModel @Inject constructor(
-    private val repository : CoinRepositoryImpl
+    private val repository : CoinRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CoinListState())
     val state  = _state.asStateFlow()
 
     init {
+        observeCoins()
+        refreshCoins()
+    }
 
+    private fun observeCoins() {
         viewModelScope.launch {
-            val response = repository.getCoins()
+            repository.observeCoins().collect{ coins ->
+                _state.update {
+                    it.copy(
+                        list = coins,
+                        topGainers = coins
+                            .filter { coin -> coin.priceChangePercentage24h != null }
+                            .sortedByDescending { coins -> coins.priceChangePercentage24h }
+                            .take(20),
 
-            if (response.isSuccessful){
+                        topLosers = coins
+                            .filter { coin -> coin.priceChangePercentage24h != null }
+                            .sortedBy { coins -> coins.priceChangePercentage24h }
+                            .take(20)
 
-                val completeList = response.body()!!
+                    )
+                }
+            }
+        }
+    }
 
-                _state.value = _state.value.copy(
-                    list = completeList,
-                    topGainers = completeList.sortedByDescending { it.priceChangePercentage24h }.take(20),
-                    topLosers = completeList.sortedBy { it.priceChangePercentage24h }.take(20)
-                )
-            } else {
-                Log.e(TAG, "Error fetching: ${response.errorBody()}")
+
+    fun refreshCoins(){
+        viewModelScope.launch {
+            _state.update { it.copy(isRefreshing = true, errorMessage = null)  }
+
+            try {
+                repository.refreshCoins()
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(errorMessage = "Could not refresh market data")
+                }
+            } finally {
+                _state.update { it.copy(isRefreshing = false) }
             }
         }
     }
 
 }
-
-data class CoinListState(
-
-    val list : List<CoinList> = emptyList(),
-    val topGainers : List<CoinList> = emptyList(),
-    val topLosers : List<CoinList> = emptyList(),
-    val page : Int = 1
-
-)

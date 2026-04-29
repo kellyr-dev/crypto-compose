@@ -1,4 +1,4 @@
-package com.example.cryptocompose.presentation.detail_coin_screen.components
+package com.example.cryptocompose.presentation.detail_coin_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.example.cryptocompose.presentation.detail_coin_screen.CoinDetailViewModel
 import java.text.NumberFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +39,11 @@ fun CoinDetailScreen(
     viewModel : CoinDetailViewModel = hiltViewModel(),
     id: String
 ) {
-    val modelCoin = viewModel.getCoin(id)
+    LaunchedEffect(id) {
+        viewModel.getCoin(id)
+
+    }
+
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
