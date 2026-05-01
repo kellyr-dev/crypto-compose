@@ -16,6 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,11 +34,24 @@ class CoinListViewModel @Inject constructor(
     private val _state = MutableStateFlow(CoinListState())
     val state  = _state.asStateFlow()
 
+    private val searchQuery = MutableStateFlow("")
+
     init {
         observeCoins()
         refreshCoins()
     }
 
+    fun onSearchQueryChanged(query: String) {
+        searchQuery.value = query
+
+        _state.update {
+            it.copy(searchQuery = query)
+        }
+    }
+
+
+    // GET the list of coins without a search query //
+    /*
     private fun observeCoins() {
         viewModelScope.launch {
             repository.observeCoins().collect{ coins ->
@@ -56,8 +72,39 @@ class CoinListViewModel @Inject constructor(
                 }
             }
         }
-    }
+    } */
 
+    private fun observeCoins() {
+        viewModelScope.launch {
+            searchQuery
+                .debounce(300)
+                .distinctUntilChanged()
+                .flatMapLatest { query ->
+                    val cleanQuery = query.trim()
+
+                    if (cleanQuery.isBlank()) {
+                        repository.observeCoins()
+                    } else {
+                        repository.searchCoins(cleanQuery)
+                    }
+                }
+                .collect { coins ->
+                    _state.update {
+                        it.copy(
+                            list = coins,
+                            topGainers = coins
+                                .filter { coin -> coin.priceChangePercentage24h != null }
+                                .sortedByDescending { coin -> coin.priceChangePercentage24h }
+                                .take(20),
+                            topLosers = coins
+                                .filter { coin -> coin.priceChangePercentage24h != null }
+                                .sortedBy { coin -> coin.priceChangePercentage24h }
+                                .take(20)
+                        )
+                    }
+                }
+        }
+    }
 
     fun refreshCoins(){
         viewModelScope.launch {

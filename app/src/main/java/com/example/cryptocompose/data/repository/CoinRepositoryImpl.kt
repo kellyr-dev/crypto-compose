@@ -2,7 +2,9 @@ package com.example.cryptocompose.data.repository
 
 
 import com.example.cryptocompose.data.db.CoinDao
+import com.example.cryptocompose.data.mappers.ChartRange
 import com.example.cryptocompose.data.mappers.Coin
+import com.example.cryptocompose.data.mappers.CoinChart
 import com.example.cryptocompose.data.mappers.toDomain
 import com.example.cryptocompose.data.mappers.toEntity
 import com.example.cryptocompose.data.model.gecko.CoinDetail
@@ -27,6 +29,11 @@ class CoinRepositoryImpl @Inject constructor(
             .map { entities -> entities.map { it.toDomain() } }
     }
 
+    override fun searchCoins(query: String): Flow<List<Coin>> {
+        return dao.searchCoins(query.trim())
+            .map { entities -> entities.map { it.toDomain() } }
+    }
+
     override suspend fun refreshCoins() {
         val remoteCoins = remote.getCoins()
         dao.upsertCoins(remoteCoins.map { it.toEntity() })
@@ -39,4 +46,15 @@ class CoinRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getCoinChart(coinId: String, range: ChartRange): Result<CoinChart> {
+        return try {
+            Result.success(
+                remote.getCoinChart(coinId = coinId, days = range.days))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
 }

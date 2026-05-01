@@ -13,10 +13,11 @@ import com.example.cryptocompose.presentation.detail_coin_screen.CoinDetailScree
 fun NavigationComponent() {
 
     val navController = rememberNavController()
+
     NavHost(
         navController = navController,
-
-        startDestination = Screen.CoinListScreen.route){
+        startDestination = Screen.CoinListScreen.route
+    ){
         composable(route = Screen.CoinListScreen.route){
             CoinListScreen(navController)
         }
@@ -25,9 +26,17 @@ fun NavigationComponent() {
             route = Screen.CoinDetailScreen.route + "/{id}",
             arguments = listOf(
                 navArgument(name = "id"){
-                    type = NavType.StringType }))
-        {
-                id -> id.arguments?.getString("id")?.let { it -> CoinDetailScreen(id = it) }
+                    type = NavType.StringType
+                }
+            )
+        ){ backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            id?.let {
+                CoinDetailScreen(
+                    id = it,
+                    onBackClick = {navController.popBackStack()}
+                )
+            }
         }
     }
 }

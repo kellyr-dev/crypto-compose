@@ -2,6 +2,7 @@ package com.example.cryptocompose.data.remote
 
 import com.example.cryptocompose.data.model.gecko.CoinDetail
 import com.example.cryptocompose.data.model.gecko.CoinList
+import com.example.cryptocompose.data.model.gecko.MarketChartDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -23,5 +24,12 @@ interface CoinGeckoAPI {
         @Path("id")
         id : String
     ) : Response<CoinDetail>
+
+    @GET("coins/{id}/market_chart")
+    suspend fun getMarketChart(
+        @Path("id") id: String,
+        @Query("vs_currency") vsCurrency: String = "usd",
+        @Query("days") days: String
+    ): Response<MarketChartDto>
 
 }

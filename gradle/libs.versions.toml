@@ -3,22 +3,24 @@ agp = "8.8.0"
 coilCompose = "3.2.0"
 converterGson = "2.9.0"
 hiltNavigationCompose = "1.2.0"
-kotlin = "2.0.0" #2.1.10
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2024.04.01"
+composeBom = "2024.12.01"
 loggingInterceptor = "4.5.0"
 navigationUiKtx = "2.9.0"
 okhttp = "4.9.0"
 retrofitVersion = "2.9.0"
-hiltVersion ="2.49"
-kspVersion = "2.0.0-1.0.21"
+hiltVersion ="2.55"
+kspVersion = "2.1.0-1.0.29"
 room = "2.6.1"
 material3 = "1.4.0"
+composeMaterialIcons = "1.7.6"
+foundationLayout = "1.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +46,8 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterialIcons" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterialIcons" }
 
 # test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -65,6 +69,7 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
