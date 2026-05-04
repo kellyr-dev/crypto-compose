@@ -23,10 +23,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -140,36 +142,53 @@ fun CoinHeaderCard(
     coin: CoinDetail
 ) {
     val currentPrice = coin.marketData.currentPrice.usd ?: 0.0
+    val priceChange24h = coin.marketData.priceChange24h ?: 0.0
     val percentage24h = coin.marketData.priceChangePercentage24h ?: 0.0
+    val isPositive = percentage24h >= 0
+
+    val priceColor = if (isPositive) {
+        Color(0xFF2E7D32)
+    } else {
+        Color(0xFFC62828)
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(22.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                AsyncImage(
-                    model = coin.image.small,
-                    contentDescription = coin.name,
-                    modifier = Modifier
-                        .size(42.dp)
-                        .clip(CircleShape)
-                )
+                Surface(
+                    modifier = Modifier.size(52.dp),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface
+                ) {
+                    AsyncImage(
+                        model = coin.image.small,
+                        contentDescription = coin.name,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                    )
+                }
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(14.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = coin.name,
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
@@ -179,27 +198,97 @@ fun CoinHeaderCard(
                     )
                 }
 
+                Surface(
+                    shape = RoundedCornerShape(50),
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                    Text(
+                        text = "#${coin.marketData.marketCapRank}",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "$${NumberFormat.getNumberInstance().format(currentPrice)}",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PriceChangeBadge(change = percentage24h)
+
+                Spacer(modifier = Modifier.width(10.dp))
+
                 Text(
-                    text = "#${coin.marketData.marketCapRank}",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "${if (priceChange24h >= 0) "+" else ""}$${NumberFormat.getNumberInstance().format(priceChange24h)} today",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = priceColor,
+                    fontWeight = FontWeight.Medium
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                text = "$${NumberFormat.getNumberInstance().format(currentPrice)}",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            PriceChangeBadge(
-                change = percentage24h
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                HeaderMiniStat(
+                    label = "24H High",
+                    value = "$${NumberFormat.getNumberInstance().format(coin.marketData.high24h.usd ?: 0.0)}"
+                )
+
+                HeaderMiniStat(
+                    label = "24H Low",
+                    value = "$${NumberFormat.getNumberInstance().format(coin.marketData.low24h.usd ?: 0.0)}"
+                )
+
+                HeaderMiniStat(
+                    label = "Volume",
+                    value = formatLargeCurrency(coin.marketData.totalVolume.usd ?: 0.0)
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun HeaderMiniStat(
+    label: String,
+    value: String
+) {
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1
+        )
     }
 }
 
