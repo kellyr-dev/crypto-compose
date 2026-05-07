@@ -50,30 +50,6 @@ class CoinListViewModel @Inject constructor(
     }
 
 
-    // GET the list of coins without a search query //
-    /*
-    private fun observeCoins() {
-        viewModelScope.launch {
-            repository.observeCoins().collect{ coins ->
-                _state.update {
-                    it.copy(
-                        list = coins,
-                        topGainers = coins
-                            .filter { coin -> coin.priceChangePercentage24h != null }
-                            .sortedByDescending { coins -> coins.priceChangePercentage24h }
-                            .take(20),
-
-                        topLosers = coins
-                            .filter { coin -> coin.priceChangePercentage24h != null }
-                            .sortedBy { coins -> coins.priceChangePercentage24h }
-                            .take(20)
-
-                    )
-                }
-            }
-        }
-    } */
-
     private fun observeCoins() {
         viewModelScope.launch {
             searchQuery

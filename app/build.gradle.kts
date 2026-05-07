@@ -71,6 +71,10 @@ dependencies {
     implementation (libs.okhttp)
     implementation (libs.logging.interceptor)
 
+    // Paging 3
+    implementation("androidx.paging:paging-runtime-ktx:3.3.6")
+    implementation("androidx.paging:paging-compose:3.3.6")
+
     // Dagger-Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
