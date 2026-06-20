@@ -1,5 +1,6 @@
 package com.example.cryptocompose.data.repository
 
+import androidx.paging.PagingData
 import com.example.cryptocompose.data.mappers.ChartRange
 import com.example.cryptocompose.data.mappers.Coin
 import com.example.cryptocompose.data.mappers.CoinChart
@@ -16,4 +17,6 @@ interface CoinRepository {
     suspend fun getCoinById(coinId: String): Result<CoinDetail>
 
     suspend fun getCoinChart(coinId: String, range: ChartRange): Result<CoinChart>
+
+    fun getPagedCoins(): Flow<PagingData<Coin>>
 }

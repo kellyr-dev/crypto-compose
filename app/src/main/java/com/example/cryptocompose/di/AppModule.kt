@@ -3,8 +3,8 @@ package com.example.cryptocompose.di
 import android.content.Context
 import androidx.room.Room
 import com.example.cryptocompose.common.Constants
-import com.example.cryptocompose.data.db.CoinDao
-import com.example.cryptocompose.data.db.CoinDatabase
+import com.example.cryptocompose.data.database.CoinDao
+import com.example.cryptocompose.data.database.CoinDatabase
 import com.example.cryptocompose.data.remote.CoinGeckoAPI
 import com.example.cryptocompose.data.remote.CoinRemoteDataSource
 import com.example.cryptocompose.data.repository.CoinRepository
@@ -59,16 +59,18 @@ object AppModule {
 
     @Provides
     fun provideCoinDao(db: CoinDatabase): CoinDao {
-        return db.CoinDao()
+        return db.coinDao()
     }
 
     @Provides
     @Singleton
     fun provideCoinRepository(
         remote: CoinRemoteDataSource,
-        dao: CoinDao
+        dao: CoinDao,
+        api: CoinGeckoAPI,
+        database: CoinDatabase
     ): CoinRepository {
-        return CoinRepositoryImpl(remote, dao)
+        return CoinRepositoryImpl(remote, dao, api, database)
     }
 
 }
